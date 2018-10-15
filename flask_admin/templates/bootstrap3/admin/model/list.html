@@ -14,10 +14,10 @@
     {% block model_menu_bar %}
     <ul class="nav nav-tabs actions-nav">
         <li class="active">
-            <a href="javascript:void(0)">{{ _gettext('List') }}{% if count %} ({{ count }}){% endif %}</a>
+            <a href="javascript:void(0)">{{ _gettext('List') }}{% if count is defined %} ({{ count }}){% endif %}</a>
         </li>
 
-        {% if admin_view.can_create %}
+        {% if admin_view.can_create is defined %}
         <li>
           {%- if admin_view.create_modal -%}
             {{ lib.add_modal_button(url=get_url('.create_view', url=return_url, modal=True), title=_gettext('Create New Record'), content=_gettext('Create')) }}
@@ -27,31 +27,31 @@
         </li>
         {% endif %}
 
-        {% if admin_view.can_export %}
+        {% if admin_view.can_export is defined %}
             {{ model_layout.export_options() }}
         {% endif %}
 
         {% block model_menu_bar_before_filters %}{% endblock %}
 
-        {% if filters %}
+        {% if filters is defined %}
         <li class="dropdown">
             {{ model_layout.filter_options() }}
         </li>
         {% endif %}
 
-        {% if can_set_page_size %}
+        {% if can_set_page_size is defined %}
         <li class="dropdown">
             {{ model_layout.page_size_form(page_size_url) }}
         </li>
         {% endif %}
 
-        {% if actions %}
+        {% if actions is defined %}
         <li class="dropdown">
             {{ actionlib.dropdown(actions) }}
         </li>
         {% endif %}
 
-        {% if search_supported %}
+        {% if search_supported is defined %}
         <li>
             {{ model_layout.search_form() }}
         </li>
@@ -60,7 +60,7 @@
     </ul>
     {% endblock %}
 
-    {% if filters %}
+    {% if filters is defined %}
         {{ model_layout.filter_form() }}
         <div class="clearfix"></div>
     {% endif %}
@@ -71,13 +71,13 @@
         <thead>
             <tr>
                 {% block list_header scoped %}
-                    {% if actions %}
+                    {% if actions is defined %}
                     <th class="list-checkbox-column">
                         <input type="checkbox" name="rowtoggle" class="action-rowtoggle" title="{{ _gettext('Select all records') }}" />
                     </th>
                     {% endif %}
                     {% block list_row_actions_header %}
-                        {% if admin_view.column_display_actions %}
+                        {% if admin_view.column_display_actions is defined %}
                         <th class="col-md-1">&nbsp;</th>
                         {% endif %}
                     {% endblock %}
@@ -88,7 +88,7 @@
                             {% if sort_column == column %}
                                 <a href="{{ sort_url(column, True) }}" title="{{ _gettext('Sort by %(name)s', name=name) }}">
                                     {{ name }}
-                                    {% if sort_desc %}
+                                    {% if sort_desc is defined %}
                                         <span class="fa fa-chevron-up glyphicon glyphicon-chevron-up"></span>
                                     {% else %}
                                         <span class="fa fa-chevron-down glyphicon glyphicon-chevron-down"></span>
@@ -114,13 +114,13 @@
         {% for row in data %}
         <tr>
             {% block list_row scoped %}
-                {% if actions %}
+                {% if actions is defined %}
                 <td>
                     <input type="checkbox" name="rowid" class="action-checkbox" value="{{ get_pk_value(row) }}" title="{{ _gettext('Select record') }}" />
                 </td>
                 {% endif %}
                 {% block list_row_actions_column scoped %}
-                    {% if admin_view.column_display_actions %}
+                    {% if admin_view.column_display_actions is defined %}
                     <td class="list-buttons-column">
                         {% block list_row_actions scoped %}
                           {% for action in list_row_actions %}
@@ -135,7 +135,7 @@
                     <td class="col-{{c}}">
                     {% if admin_view.is_editable(c) %}
                         {% set form = list_forms[get_pk_value(row)] %}
-                        {% if form.csrf_token %}
+                        {% if form.csrf_token is defined %}
                         {{ form[c](pk=get_pk_value(row), display_value=get_value(row, c), csrf=form.csrf_token._value()) }}
                         {% else %}
                         {{ form[c](pk=get_pk_value(row), display_value=get_value(row, c)) }}
@@ -181,7 +181,7 @@
 {% block tail %}
     {{ super() }}
 
-    {% if filter_groups %}
+    {% if filter_groups is defined %}
       <div id="filter-groups-data" style="display:none;">{{ filter_groups|tojson|safe }}</div>
       <div id="active-filters-data" style="display:none;">{{ active_filters|tojson|safe }}</div>
     {% endif %}

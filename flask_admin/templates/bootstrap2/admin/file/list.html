@@ -13,7 +13,7 @@
             <span class="divider">/</span><a href="{{ get_dir_url('.index_view', path=path) }}">{{ name }}</a>
         </li>
         {% endfor %}
-        {% if breadcrumbs %}
+        {% if breadcrumbs is defined %}
         <li>
             <span class="divider">/</span><a href="{{ get_dir_url('.index_view', path=breadcrumbs[-1][1]) }}">{{ breadcrumbs[-1][0] }}</a>
         </li>
@@ -27,7 +27,7 @@
         <thead>
             <tr>
                 {% block list_header scoped %}
-                {% if actions %}
+                {% if actions is defined %}
                 <th class="span1">
                     <input type="checkbox" name="rowtoggle" class="action-rowtoggle" />
                 </th>
@@ -39,7 +39,7 @@
                     {% if sort_column == column %}
                         <a href="{{ sort_url(column, dir_path, True) }}" title="{{ _gettext('Sort by %(name)s', name=column) }}">
                             {{ admin_view.column_label(column) }}
-                            {% if sort_desc %}
+                            {% if sort_desc is defined %}
                                 <i class="fa fa-chevron-up icon-chevron-up"></i>
                             {% else %}
                                 <i class="fa fa-chevron-down icon-chevron-down"></i>
@@ -59,7 +59,7 @@
         {% for name, path, is_dir, size, date in items %}
         <tr>
             {% block list_row scoped %}
-            {% if actions %}
+            {% if actions is defined %}
             <td>
                 {% if not is_dir %}
                 <input type="checkbox" name="rowid" class="action-checkbox" value="{{ path }}" />
@@ -80,7 +80,7 @@
                   {%- endif -%}
                 {% endif %}
                 {%- if admin_view.can_delete and path -%}
-                    {% if is_dir %}
+                    {% if is_dir is defined %}
                         {% if name != '..' and admin_view.can_delete_dirs %}
                         <form class="icon" method="POST" action="{{ get_url('.delete') }}">
                             {{ delete_form.path(value=path) }}
@@ -102,7 +102,7 @@
                 {%- endif -%}
                 {% endblock %}
             </td>
-            {% if is_dir %}
+            {% if is_dir is defined %}
             <td colspan="2" data-title="{{ _gettext('Name') }}">
                 <a href="{{ get_dir_url('.index_view', path)|safe }}">
                     <i class="fa fa-folder-o icon-folder-close"></i> <span>{{ name }}</span>
@@ -110,7 +110,7 @@
             </td>
             {% else %}
             <td data-title="{{ _gettext('Name') }}">
-                {% if admin_view.can_download %}
+                {% if admin_view.can_download is defined %}
                   {%- if admin_view.edit_modal and admin_view.is_file_editable(path) -%}
                     {{ lib.add_modal_button(url=get_file_url(path, modal=True)|safe,
                                             btn_class='', content=name) }}
@@ -140,7 +140,7 @@
     {% endblock %}
     {% block toolbar %}
     <div class="btn-toolbar">
-        {% if admin_view.can_upload %}
+        {% if admin_view.can_upload is defined %}
         <div class="btn-group">
             {%- if admin_view.upload_modal -%}
               {{ lib.add_modal_button(url=get_dir_url('.upload', path=dir_path, modal=True),
@@ -151,7 +151,7 @@
             {%- endif -%}
         </div>
         {% endif %}
-        {% if admin_view.can_mkdir %}
+        {% if admin_view.can_mkdir is defined %}
         <div class="btn-group">
             {%- if admin_view.mkdir_modal -%}
               {{ lib.add_modal_button(url=get_dir_url('.mkdir', path=dir_path, modal=True),
@@ -162,7 +162,7 @@
             {%- endif -%}
         </div>
         {% endif %}
-        {% if actions %}
+        {% if actions is defined %}
         <div class="btn-group">
             {{ actionslib.dropdown(actions, 'dropdown-toggle btn btn-large') }}
         </div>

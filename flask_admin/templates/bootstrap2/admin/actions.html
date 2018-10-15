@@ -12,11 +12,11 @@
 {% endmacro %}
 
 {% macro form(actions, url) %}
-    {% if actions %}
+    {% if actions is defined %}
     <form id="action_form" action="{{ url }}" method="POST" style="display: none">
-        {% if action_form.csrf_token %}
+        {% if action_form.csrf_token is defined %}
         {{ action_form.csrf_token }}
-        {% elif csrf_token %}
+        {% elif csrf_token is defined %}
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         {% endif %}
         {{ action_form.url(value=return_url) }}
@@ -26,7 +26,7 @@
 {% endmacro %}
 
 {% macro script(message, actions, actions_confirmation) %}
-    {% if actions %}
+    {% if actions is defined %}
         <div id="actions-confirmation-data" style="display:none;">{{ actions_confirmation|tojson|safe }}</div>
         <div id="message-data" style="display:none;">{{ message|tojson|safe }}</div>
         <script src="{{ admin_static.url(filename='admin/js/actions.js', v='1.0.0') }}"></script>

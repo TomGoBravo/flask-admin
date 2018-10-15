@@ -88,7 +88,7 @@
           <a href="{{ generator(0) }}">&lt;</a>
       </li>
       {% endif %}
-      {% if have_next %}
+      {% if have_next is defined %}
       <li>
           <a href="{{ generator(page + 1) }}">&gt;</a>
       </li>
@@ -136,10 +136,10 @@
     <div>
       {{ field(**kwargs)|safe }}
     </div>
-    {% if field.description %}
+    {% if field.description is defined %}
     <p class="help-block">{{ field.description|safe }}</p>
     {% endif %}
-    {% if direct_error %}
+    {% if direct_error is defined %}
       <ul class="input-errors">
       {% for e in field.errors if e is string %}
         <li>{{ e }}</li>
@@ -147,7 +147,7 @@
       </ul>
     {% endif %}
     </div>
-    {% if caller %}
+    {% if caller is defined %}
       {{ caller(form, field, direct_error, kwargs) }}
     {% endif %}
   </div>
@@ -161,7 +161,7 @@
     {% if form.hidden_tag is defined %}
         {{ form.hidden_tag() }}
     {% else %}
-        {% if csrf_token %}
+        {% if csrf_token is defined %}
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         {% endif %}
         {% for f in form if f.widget.input_type == 'hidden' %}
@@ -175,7 +175,7 @@
         {% endfor %}
     {% else %}
         {% for f in form if f.widget.input_type != 'hidden' %}
-          {% if form_opts %}
+          {% if form_opts is defined %}
             {% set kwargs = form_opts.widget_args.get(f.short_name, {}) %}
           {% else %}
             {% set kwargs = {} %}
@@ -198,11 +198,11 @@
     <div class="control-group">
       <div class="controls">
         <input type="submit" class="btn btn-primary" value="{{ _gettext('Save') }}" />
-        {% if extra %}
+        {% if extra is defined %}
         {{ extra }}
         {% endif %}
-        {% if cancel_url %}
-          <a href="{{ cancel_url }}" class="btn btn-danger" {% if is_modal %}data-dismiss="modal"{% endif %}>{{ _gettext('Cancel') }}</a>
+        {% if cancel_url is defined %}
+          <a href="{{ cancel_url }}" class="btn btn-danger" {% if is_modal is defined %}data-dismiss="modal"{% endif %}>{{ _gettext('Cancel') }}</a>
         {% endif %}
       </div>
     </div>
@@ -218,20 +218,20 @@
 {% macro form_css() %}
   <link href="{{ admin_static.url(filename='vendor/select2/select2.css', v='3.5.2') }}" rel="stylesheet">
   <link href="{{ admin_static.url(filename='vendor/bootstrap-daterangepicker/daterangepicker-bs2.css', v='1.3.22') }}" rel="stylesheet">
-  {% if config.MAPBOX_MAP_ID %}
+  {% if config.MAPBOX_MAP_ID is defined %}
   <link href="{{ admin_static.url(filename='vendor/leaflet/leaflet.css', v='1.0.2') }}" rel="stylesheet">
   <link href="{{ admin_static.url(filename='vendor/leaflet/leaflet.draw.css', v='0.4.6') }}" rel="stylesheet">
   {% endif %}
-  {% if editable_columns %}
+  {% if editable_columns is defined %}
   <link href="{{ admin_static.url(filename='vendor/x-editable/css/bootstrap2-editable.css', v='1.5.1.1') }}" rel="stylesheet">
   {% endif %}
 {% endmacro %}
 
 {% macro form_js() %}
-  {% if config.MAPBOX_MAP_ID %}
+  {% if config.MAPBOX_MAP_ID is defined %}
   <script>
   window.MAPBOX_MAP_ID = "{{ config.MAPBOX_MAP_ID }}";
-  {% if config.MAPBOX_ACCESS_TOKEN %}
+  {% if config.MAPBOX_ACCESS_TOKEN is defined %}
   window.MAPBOX_ACCESS_TOKEN = "{{ config.MAPBOX_ACCESS_TOKEN }}";
   {% endif %}
   {% if config.DEFAULT_CENTER_LAT and config.DEFAULT_CENTER_LONG %}
@@ -241,7 +241,7 @@
   </script>
   <script src="{{ admin_static.url(filename='vendor/leaflet/leaflet.js', v='1.0.2') }}"></script>
   <script src="{{ admin_static.url(filename='vendor/leaflet/leaflet.draw.js', v='0.4.6') }}"></script>
-  {% if config.MAPBOX_SEARCH %}
+  {% if config.MAPBOX_SEARCH is defined %}
   <script>
   window.MAPBOX_SEARCH = "{{ config.MAPBOX_SEARCH }}";
   </script>
@@ -249,17 +249,17 @@
   {% endif %}
   {% endif %}
   <script src="{{ admin_static.url(filename='vendor/bootstrap-daterangepicker/daterangepicker.js', v='1.3.22') }}"></script>
-  {% if editable_columns %}
+  {% if editable_columns is defined %}
   <script src="{{ admin_static.url(filename='vendor/x-editable/js/bootstrap2-editable.min.js', v='1.5.1.1') }}"></script>
   {% endif %}
   <script src="{{ admin_static.url(filename='admin/js/form.js', v='1.0.1') }}"></script>
 {% endmacro %}
 
 {% macro extra() %}
-  {% if admin_view.can_create %}
+  {% if admin_view.can_create is defined %}
   <input name="_add_another" type="submit" class="btn" value="{{ _gettext('Save and Add Another') }}" />
   {% endif %}
-  {% if admin_view.can_edit %}
+  {% if admin_view.can_edit is defined %}
   <input name="_continue_editing" type="submit" class="btn" value="{{ _gettext('Save and Continue Editing') }}" />
   {% endif %}
 {% endmacro %}
