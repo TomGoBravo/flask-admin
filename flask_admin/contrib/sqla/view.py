@@ -509,8 +509,6 @@ class ModelView(BaseModelView):
                     # column is in same table, use only model attribute name
                     if getattr(column, 'key', None) is not None:
                         column_name = column.key
-                    else:
-                        column_name = text_type(c)
 
                 # column_name must match column_name used in `get_list_columns`
                 result[column_name] = column
@@ -829,8 +827,6 @@ class ModelView(BaseModelView):
         """
             Return a query for the model type.
 
-            If you override this method, don't forget to override `get_count_query` as well.
-
             This method can be used to set a "persistent filter" on an index_view.
 
             Example::
@@ -838,6 +834,10 @@ class ModelView(BaseModelView):
                 class MyView(ModelView):
                     def get_query(self):
                         return super(MyView, self).get_query().filter(User.username == current_user.username)
+
+
+            If you override this method, don't forget to also override `get_count_query`, for displaying the correct
+            item count in the list view, and `get_one`, which is used when retrieving records for the edit view.
         """
         return self.session.query(self.model)
 
@@ -1078,6 +1078,14 @@ class ModelView(BaseModelView):
         """
             Return a single model by its id.
 
+            Example::
+
+                def get_one(self, id):
+                    query = self.get_query()
+                    return query.filter(self.model.id == id).one()
+
+            Also see `get_query` for how to filter the list view.
+
             :param id:
                 Model id
         """
@@ -1086,7 +1094,10 @@ class ModelView(BaseModelView):
     # Error handler
     def handle_view_exception(self, exc):
         if isinstance(exc, IntegrityError):
-            if current_app.config.get('ADMIN_RAISE_ON_VIEW_EXCEPTION'):
+            if current_app.config.get(
+                'ADMIN_RAISE_ON_INTEGRITY_ERROR',
+                current_app.config.get('ADMIN_RAISE_ON_VIEW_EXCEPTION')
+            ):
                 raise
             else:
                 flash(gettext('Integrity error. %(message)s', message=text_type(exc)), 'error')
