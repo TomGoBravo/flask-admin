@@ -147,7 +147,7 @@
       </ul>
     {% endif %}
     </div>
-    {% if caller is defined %}
+    {% if caller is defined and caller %}
       {{ caller(form, field, direct_error, kwargs) }}
     {% endif %}
   </div>
@@ -164,7 +164,7 @@
         {% if csrf_token is defined %}
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         {% endif %}
-        {% for f in form if f.widget.input_type == 'hidden' %}
+        {% for f in form if (f.widget.input_type is defined and f.widget.input_type == 'hidden') %}
             {{ f }}
         {% endfor %}
     {% endif %}
@@ -174,7 +174,7 @@
             {{ r(form, form_opts=form_opts) }}
         {% endfor %}
     {% else %}
-        {% for f in form if f.widget.input_type != 'hidden' %}
+        {% for f in form if (f.widget.input_type is defined and f.widget.input_type != 'hidden') %}
           {% if form_opts is defined %}
             {% set kwargs = form_opts.widget_args.get(f.short_name, {}) %}
           {% else %}
@@ -234,7 +234,7 @@
   {% if config.MAPBOX_ACCESS_TOKEN is defined %}
   window.MAPBOX_ACCESS_TOKEN = "{{ config.MAPBOX_ACCESS_TOKEN }}";
   {% endif %}
-  {% if config.DEFAULT_CENTER_LAT and config.DEFAULT_CENTER_LONG %}
+  {% if config.DEFAULT_CENTER_LAT is defined and config.DEFAULT_CENTER_LONG is defined %}
   window.DEFAULT_CENTER_LAT = "{{ config.DEFAULT_CENTER_LAT }}";
   window.DEFAULT_CENTER_LONG = "{{ config.DEFAULT_CENTER_LONG }}";
   {% endif %}
