@@ -28,8 +28,10 @@ class GeoJSONField(JSONField):
 
     def _value(self):
         if self.raw_data:
+            print("self.raw_data")
             return self.raw_data[0]
         if type(self.data) is geoalchemy2.elements.WKBElement:
+            print("self.data is WKBElement")
             if self.srid is -1:
                 return self.session.scalar(func.ST_AsGeoJson(self.data))
             else:
@@ -39,6 +41,7 @@ class GeoJSONField(JSONField):
                     )
                 )
         else:
+            print("not raw_data or self.data is WKBElement")
             return ''
 
     def process_formdata(self, valuelist):

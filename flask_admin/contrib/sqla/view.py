@@ -734,6 +734,7 @@ class ModelView(BaseModelView):
         """
             Create form from the model.
         """
+        print ("scaffold_form")
         converter = self.model_form_converter(self.session, self)
         form_class = form.get_form(self.model, converter,
                                    base_class=self.form_base_class,
@@ -743,6 +744,7 @@ class ModelView(BaseModelView):
                                    ignore_hidden=self.ignore_hidden,
                                    extra_fields=self.form_extra_fields)
 
+        print("scaffold_form")
         if self.inline_models:
             form_class = self.scaffold_inline_form_models(form_class)
 
@@ -780,6 +782,7 @@ class ModelView(BaseModelView):
                                                             self.model_form_converter)
 
         for m in self.inline_models:
+            print("inline_converter.contribute({})".format(repr(self.model)))
             form_class = inline_converter.contribute(self.model, form_class, m)
 
         return form_class

@@ -260,6 +260,8 @@ class AdminModelConverter(ModelConverterBase):
             if converter is None:
                 return None
 
+            print ("converter for {} is {}".format(repr(column), repr(converter)))
+
             return converter(model=model, mapper=mapper, prop=prop,
                              column=column, field_args=kwargs)
 
@@ -410,6 +412,7 @@ def get_form(model, converter,
     if not hasattr(model, '_sa_class_manager'):
         raise TypeError('model must be a sqlalchemy mapped model')
 
+    print("model {}".format(repr(model)))
     mapper = model._sa_class_manager.mapper
     field_args = field_args or {}
 
@@ -444,6 +447,7 @@ def get_form(model, converter,
 
     field_dict = {}
     for name, p in properties:
+        print("get_form for {}".format(name))
         # Ignore protected properties
         if ignore_hidden and name.startswith('_'):
             continue
