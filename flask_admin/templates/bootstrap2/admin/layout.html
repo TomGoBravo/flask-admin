@@ -20,14 +20,14 @@
     {%- if item.is_category() -%}
       {% set children = item.get_children() %}
       {%- if children is defined %}
-        {% set class_name = item.get_class_name() %}
+        {% set class_name = item.get_class_name() or '' %}
         {%- if item.is_active(admin_view) %}
         <li class="active dropdown">
         {% else -%}
         <li class="dropdown">
         {%- endif %}
           <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
-            {% if item.class_name is defined %}<i class="{{ item.class_name }}"></i> {% endif %}
+            {% if item.class_name %}<i class="{{ item.class_name }}"></i> {% endif %}
             {{ menu_icon(item) }}{{ item.name }}
             {%- if 'dropdown-submenu' not in class_name -%}<b class="caret"></b>{%- endif -%}
           </a>
@@ -36,11 +36,11 @@
             {%- if child.is_category() -%}
               {{ menu(menu_root=[child]) }}
             {% else %}
-              {% set class_name = child.get_class_name() %}
+              {% set class_name = child.get_class_name() or '' %}
               {%- if child.is_active(admin_view) %}
-              <li class="active{% if class_name is defined %} {{class_name}}{% endif %}">
+              <li class="active{% if class_name %} {{class_name}}{% endif %}">
               {% else %}
-              <li{% if class_name is defined %} class="{{class_name}}"{% endif %}>
+              <li{% if class_name %} class="{{class_name}}"{% endif %}>
               {%- endif %}
               <a href="{{ child.get_url() }}"{% if child.target is defined %}
                target="{{ child.target }}"{% endif %}>
