@@ -49,6 +49,7 @@ class GeoJSONField(JSONField):
         if str(self.data) is '':
             self.data = None
         if self.data is not None:
+            print(repr(self.data))
             web_shape = self.session.scalar(
                 func.ST_AsText(
                     func.ST_Transform(

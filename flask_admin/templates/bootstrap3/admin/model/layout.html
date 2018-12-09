@@ -3,11 +3,13 @@
         {{ _gettext('Add Filter') }}<b class="caret"></b>
     </a>
     <ul class="dropdown-menu field-filters">
-        {% for k in filter_groups %}
-        <li>
-            <a href="javascript:void(0)" class="filter" onclick="return false;">{{ k }}</a>
-        </li>
-        {% endfor %}
+        {% if filter_groups is defined and filter_groups is not none %}
+            {% for k in filter_groups %}
+            <li>
+                <a href="javascript:void(0)" class="filter" onclick="return false;">{{ k }}</a>
+            </li>
+            {% endfor %}
+        {% endif %}
     </ul>
 {% endmacro %}
 

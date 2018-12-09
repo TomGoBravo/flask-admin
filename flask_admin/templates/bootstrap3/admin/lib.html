@@ -139,7 +139,7 @@
         </ul>
       {% endif %}
     </div>
-    {% if caller is defined %}
+    {% if caller is defined and caller is not none %}
       {{ caller(form, field, direct_error, kwargs) }}
     {% endif %}
   </div>
