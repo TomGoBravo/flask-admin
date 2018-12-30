@@ -8,14 +8,10 @@ from .widgets import LeafletWidget
 
 
 class GeoJSONField(JSONField):
+    widget = LeafletWidget()
 
     def __init__(self, label=None, validators=None, geometry_type="GEOMETRY",
-                 srid='-1', session=None, tile_layer_url=None,
-                 tile_layer_attribution=None, **kwargs):
-        self.widget = LeafletWidget(
-            tile_layer_url=tile_layer_url,
-            tile_layer_attribution=tile_layer_attribution
-        )
+                 srid='-1', session=None, **kwargs):
         super(GeoJSONField, self).__init__(label, validators, **kwargs)
         self.web_srid = 4326
         self.srid = srid
