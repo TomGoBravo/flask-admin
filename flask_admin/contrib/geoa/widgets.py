@@ -33,12 +33,14 @@ class LeafletWidget(TextArea):
         self.max_zoom = max_zoom
         self.max_bounds = max_bounds
         self.tile_layer_url = tile_layer_url
+        print('Making LeafletWidget with tile_layer_url='+repr(tile_layer_url))
         self.tile_layer_attribution = tile_layer_attribution
 
     def __call__(self, field, **kwargs):
         kwargs.setdefault('data-role', self.data_role)
         gtype = getattr(field, "geometry_type", "GEOMETRY")
         kwargs.setdefault('data-geometry-type', gtype)
+        print ('LeafletWidget called with '+repr(self.__dict__)+' and '+repr(kwargs))
 
         # set optional values from constructor
         if self.tile_layer_url:
