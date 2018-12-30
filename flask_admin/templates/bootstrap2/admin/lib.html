@@ -174,7 +174,7 @@
             {{ r(form, form_opts=form_opts) }}
         {% endfor %}
     {% else %}
-        {% for f in form if (f.widget.input_type is defined and f.widget.input_type != 'hidden') %}
+        {% for f in form if (f.widget.input_type is not defined or f.widget.input_type != 'hidden') %}
           {% if form_opts is defined %}
             {% set kwargs = form_opts.widget_args.get(f.short_name, {}) %}
           {% else %}
