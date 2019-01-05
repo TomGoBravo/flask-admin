@@ -3,8 +3,12 @@ from jinja2 import Markup
 from wtforms.widgets import html_params
 from geoalchemy2.shape import to_shape
 from geoalchemy2.elements import WKBElement
+from geoalchemy2.functions import GenericFunction
 from sqlalchemy import func
 
+class AsGeoJSON(GenericFunction):
+    name = 'AsGeoJSON'
+    identifier = 'ST_AsGeoJSON'
 
 def geom_formatter(view, value):
     params = html_params(**{
@@ -17,7 +21,7 @@ def geom_formatter(view, value):
     })
     if value.srid is -1:
         value.srid = 4326
-    geojson = view.session.query(view.model).with_entities(func.ST_AsGeoJSON(value)).scalar()
+    geojson = view.session.query(view.model).with_entities(AsGeoJSON(value)).scalar()
     return Markup('<textarea %s>%s</textarea>' % (params, geojson))
 
 
