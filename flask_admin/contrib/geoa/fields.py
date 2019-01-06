@@ -1,4 +1,5 @@
 import geoalchemy2
+from geoalchemy2.functions import GenericFunction
 from shapely.geometry import shape
 from sqlalchemy import func
 
@@ -6,6 +7,9 @@ from flask_admin.form import JSONField
 
 from .widgets import LeafletWidget
 
+class AsGeoJSON(GenericFunction):
+    name = 'AsGeoJSON'
+    identifier = 'ST_AsGeoJSON'
 
 class GeoJSONField(JSONField):
     widget = LeafletWidget()
@@ -23,16 +27,17 @@ class GeoJSONField(JSONField):
         self.session = session
 
     def _value(self):
+        # Putting this directly under the file imports doesn't work.
         if self.raw_data:
             print("self.raw_data")
             return self.raw_data[0]
         if type(self.data) is geoalchemy2.elements.WKBElement:
             print("self.data is WKBElement")
             if self.srid is -1:
-                return self.session.scalar(func.ST_AsGeoJson(self.data))
+                return self.session.scalar(AsGeoJSON(self.data))
             else:
                 return self.session.scalar(
-                    func.ST_AsGeoJson(
+                    AsGeoJSON(
                         func.ST_Transform(self.data, self.web_srid)
                     )
                 )
