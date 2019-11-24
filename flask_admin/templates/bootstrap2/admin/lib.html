@@ -227,6 +227,7 @@
   {% endif %}
 {% endmacro %}
 
+
 {% macro form_js() %}
   {% if config.MAPBOX_MAP_ID %}
   <script>
@@ -245,7 +246,8 @@
   <script>
   window.MAPBOX_SEARCH = "{{ config.MAPBOX_SEARCH }}";
   </script>
-  <script src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places&key={{ config.get('GOOGLE_MAPS_API_KEY') }}"></script>
+  <script src="{{ admin_static.url(filename='vendor/leaflet-search/leaflet-search.js', v='20191124') }}"></script>
+  <link href="{{ admin_static.url(filename='vendor/leaflet-search/leaflet-search.css', v='20191124') }}" rel="stylesheet">
   {% endif %}
   {% endif %}
   <script src="{{ admin_static.url(filename='vendor/bootstrap-daterangepicker/daterangepicker.js', v='1.3.22') }}"></script>

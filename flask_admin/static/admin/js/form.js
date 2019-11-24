@@ -171,6 +171,18 @@
           }).addTo(map);
         }
 
+        if (window.MAPBOX_SEARCH) {
+	  map.addControl( new L.Control.Search({
+		url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}',
+		jsonpParam: 'json_callback',
+		propertyName: 'display_name',
+		propertyLoc: ['lat','lon'],
+		marker: L.circleMarker([0,0],{radius:30}),
+		autoCollapse: true,
+		autoType: false,
+		minLength: 2
+	}) );
+        }
 
         // everything below here is to set up editing, so if we're not editable,
         // we can just return early.
@@ -204,37 +216,6 @@
         }
         var drawControl = new L.Control.Draw(drawOptions);
         map.addControl(drawControl);
-        if (window.MAPBOX_SEARCH) {
-          var circle = L.circleMarker([0, 0]);
-          var $autocompleteEl = $('<input style="position: absolute; z-index: 9999; display: block; margin: -42px 0 0 10px; width: 50%">');
-          var $form = $($el.get(0).form);
-
-          $autocompleteEl.insertAfter($map);
-          $form.on('submit', function (evt) {
-            if ($autocompleteEl.is(':focus')) {
-              evt.preventDefault();
-              return false;
-            }
-          });
-          var autocomplete = new google.maps.places.Autocomplete($autocompleteEl.get(0));
-          autocomplete.addListener('place_changed', function() {
-            var place = autocomplete.getPlace();
-            var loc = place.geometry.location;
-            var viewport = place.geometry.viewport;
-            circle.setLatLng(L.latLng(loc.lat(), loc.lng()));
-            circle.addTo(map);
-            if (viewport) {
-              map.fitBounds([
-                viewport.getNorthEast().toJSON(),
-                viewport.getSouthWest().toJSON(),
-              ]);
-            }
-            else {
-              map.fitBounds(circle.getBounds());
-            }
-          });
-        }
-
 
         // save when the editableLayers are edited
         var saveToTextArea = function() {
